@@ -15,12 +15,18 @@ try:
     # 필요한 데이터 추출
     price = ticker['trade_price']
     change_rate = ticker['signed_change_rate'] * 100 # 백분율 변환
-    trade_date = ticker['trade_date_kst']
-    trade_time = ticker['trade_time_kst']
     
-    # 날짜와 시간 포맷팅 (YYYY-MM-DD HH:MM:SS)
-    formatted_date = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
-    formatted_time = f"{trade_time[:2]}:{trade_time[2:4]}:{trade_time[4:]}"
+    # [수정된 부분 시작] -----------------------------------------
+    # 기존: 빗썸에서 준 거래 체결 시간 사용 (거래 없으면 시간 안 바뀜)
+    # 수정: 파이썬이 실행되는 현재 시간을 구해 강제로 시간 갱신 (무조건 바뀜)
+    
+    # GitHub 서버는 UTC(협정 세계시) 기준이므로 한국 시간(KST, UTC+9)으로 변환
+    kst_timezone = datetime.timezone(datetime.timedelta(hours=9))
+    now = datetime.datetime.now(kst_timezone)
+    
+    formatted_date = now.strftime("%Y-%m-%d")
+    formatted_time = now.strftime("%H:%M:%S")
+    # [수정된 부분 끝] -------------------------------------------
     
     # 등락 화살표 표시
     if change_rate > 0:
@@ -42,7 +48,7 @@ GitHub Actions와 Cron을 이용해 5분마다 빗썸 가격 정보를 업데이
 | --- | --- |
 | **현재가** | **{price:,.0f} KRW** |
 | **변동률(전일대비)** | {icon} {change_rate:.2f}% |
-| **업데이트 시간** | {formatted_date} {formatted_time} (KST) |
+| **마지막 확인** | {formatted_date} {formatted_time} (KST) |
 
 ---
 *Last updated by GitHub Actions bot*
