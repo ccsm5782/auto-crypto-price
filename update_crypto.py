@@ -38,7 +38,7 @@ try:
 
     # README.md에 저장할 내용 작성
     readme_content = f"""
-# 💰 비트코인(BTC) 실시간 시세 자동화
+# 💰 비트코인(BTC) 실시간 시세 자동화: 나는 BIUT야 엄마 나 어떡해 ㅜㅜ
 
 GitHub Actions와 Cron을 이용해 5분마다 빗썸 가격 정보를 업데이트합니다.
 
